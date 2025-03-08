@@ -1,0 +1,24 @@
+# Build files
+bin/
+obj/
+
+# User-specific files
+.vscode/
+.vs/
+.idea/
+*.user
+*.suo
+*.vcxproj.user
+
+# Environment & Secrets
+.env
+secrets.json
+
+# Entity Framework Migrations
+Migrations/
+
+# Node modules
+node_modules/
+
+# Docker-related
+docker-compose.override.yml
