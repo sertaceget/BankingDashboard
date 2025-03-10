@@ -5,7 +5,6 @@ using BankingDashboard.Application.Common.Interfaces;
 using BankingDashboard.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using BCrypt.Net;
 
 namespace BankingDashboard.Application.Services;
 

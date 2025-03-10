@@ -25,5 +25,22 @@ public class AppDbContext : DbContext
             .HasMany(a => a.Transactions)
             .WithOne(t => t.Account)
             .HasForeignKey(t => t.AccountId);
+
+        // Add explicit configuration for Transaction entity
+        modelBuilder.Entity<Transaction>()
+            .Property(t => t.Type)
+            .HasConversion<string>();  // Store enum as string
+        
+        modelBuilder.Entity<Transaction>()
+            .HasOne(t => t.Account)
+            .WithMany(a => a.Transactions)
+            .HasForeignKey(t => t.AccountId);
+        
+        // Add configuration for TargetAccountId (optional relationship)
+        modelBuilder.Entity<Transaction>()
+            .HasOne<Account>()
+            .WithMany()
+            .HasForeignKey(t => t.TargetAccountId)
+            .IsRequired(false);  // Make it optional
     }
 }

@@ -1,6 +1,5 @@
 ﻿using BankingDashboard.Application.Common.Interfaces;
 using BankingDashboard.Application.Services;
-using BankingDashboard.Domain.Interfaces;
 using BankingDashboard.Infrastructure.Data;
 using BankingDashboard.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -20,9 +19,12 @@ public static class DependencyInjection
 
         services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
-        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IAccountRepository, AccountRepository>();
+        services.AddScoped<ITransactionRepository, TransactionRepository>();
+        services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<ITransactionService, TransactionService>();
 
         // JWT Authentication
         var key = Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!);

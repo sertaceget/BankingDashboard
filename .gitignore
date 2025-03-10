@@ -9,6 +9,7 @@ obj/
 *.user
 *.suo
 *.vcxproj.user
+.gitignore.bak
 
 # Environment & Secrets
 .env
