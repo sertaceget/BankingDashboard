@@ -9,15 +9,15 @@ using System.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-var infrastructureAssembly = assemblies.FirstOrDefault(a => a.GetName().Name == "BankingDashboard.Infrastructure");
-Console.WriteLine($"Infrastructure assembly loaded: {infrastructureAssembly != null}");
+//var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+//var infrastructureAssembly = assemblies.FirstOrDefault(a => a.GetName().Name == "BankingDashboard.Infrastructure");
+//Console.WriteLine($"Infrastructure assembly loaded: {infrastructureAssembly != null}");
 
-if (infrastructureAssembly != null)
-{
-    var userRepoType = infrastructureAssembly.GetTypes().FirstOrDefault(t => t.Name == "UserRepository");
-    Console.WriteLine($"UserRepository type found: {userRepoType != null}");
-}
+//if (infrastructureAssembly != null)
+//{
+//    var userRepoType = infrastructureAssembly.GetTypes().FirstOrDefault(t => t.Name == "UserRepository");
+//    Console.WriteLine($"UserRepository type found: {userRepoType != null}");
+//}
 
 // Add services to the container
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -25,7 +25,11 @@ builder.Services.AddInfrastructure(builder.Configuration);
 // Explicitly register the UserRepository
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

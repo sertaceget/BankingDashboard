@@ -1,5 +1,6 @@
 ﻿using BankingDashboard.API.Models;
 using BankingDashboard.Application.Common.Interfaces;
+using BankingDashboard.Application.DTOs;
 using BankingDashboard.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -59,16 +60,31 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{email}")]
-    [Authorize]
     public async Task<IActionResult> GetUser(string email)
     {
         var user = await _userRepository.GetUserByEmailAsync(email);
         if (user == null)
-        {
             return NotFound();
-        }
 
-        return Ok(new UserResponse(user));
+        var userDto = new UserDto
+        {
+            Id = user.Id,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email,
+            CreatedAt = user.CreatedAt,
+            Role = user.Role,
+            Accounts = user.Accounts?.Select(a => new AccountDto
+            {
+                Id = a.Id,
+                AccountNumber = a.AccountNumber,
+                Balance = a.Balance,
+                UserId = a.UserId
+                // Typically don't include transactions when getting a user
+            }).ToList() ?? new List<AccountDto>()
+        };
+
+        return Ok(userDto);
     }
 
     [HttpGet]

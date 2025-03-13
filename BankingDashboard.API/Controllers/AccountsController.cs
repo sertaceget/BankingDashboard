@@ -3,6 +3,7 @@ using BankingDashboard.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using BankingDashboard.Application.DTOs;
 
 namespace BankingDashboard.API.Controllers;
 
@@ -29,14 +30,31 @@ public class AccountsController : ControllerBase
         return CreatedAtAction(nameof(GetAccount), new { id = account.Id }, account);
     }
 
-    [HttpGet("{id:guid}")]
+    [HttpGet("{id}")]
     public async Task<IActionResult> GetAccount(Guid id)
     {
         var account = await _accountService.GetAccountByIdAsync(id);
         if (account == null)
             return NotFound();
 
-        return Ok(account);
+        var accountDto = new AccountDto
+        {
+            Id = account.Id,
+            AccountNumber = account.AccountNumber,
+            Balance = account.Balance,
+            UserId = account.UserId,
+            Transactions = account.Transactions?.Select(t => new TransactionDto
+            {
+                Id = t.Id,
+                Amount = t.Amount,
+                Timestamp = t.Timestamp,
+                Type = (int)t.Type,
+                AccountId = t.AccountId,
+                TargetAccountId = t.TargetAccountId
+            }).ToList() ?? new List<TransactionDto>()
+        };
+
+        return Ok(accountDto);
     }
 
     [HttpGet("all")]
